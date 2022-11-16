@@ -7,7 +7,7 @@ export const Modal = ({ togleModal, pictureData }) => {
     return () => {
       window.removeEventListener('keydown', handleEscPress);
     };
-  },[]);
+  },[handleEscPress]);
 
   function handleEscPress(e) {
     console.log(e)
