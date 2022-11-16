@@ -1,19 +1,29 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 
-export class Modal extends Component {
-  render() {
-    const {togleModal, pictureData } = this.props;
-    // console.log(pictureData.largeImageURL)
-    return (
-      <div className="Overlay" onClick={togleModal}>
-        <div className="Modal">
-          <img src={pictureData}  />
-        </div>
+export const Modal = ({ togleModal, pictureData }) => {
+  useEffect(() => {
+    window.addEventListener('keydown', handleEscPress);
+    return () => {
+      window.removeEventListener('keydown', handleEscPress);
+    };
+  },[]);
+
+  function handleEscPress(e) {
+    console.log(e)
+    if (e.code === 'Escape') {
+      togleModal('');
+    }}
+ 
+
+  return (
+    <div className="Overlay" onClick={togleModal}>
+      <div className="Modal">
+        <img src={pictureData} alt={'qwe'} />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 Modal.propTypes = {
   togleModal: PropTypes.func.isRequired,
   pictureData: PropTypes.string.isRequired,
