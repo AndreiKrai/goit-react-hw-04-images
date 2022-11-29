@@ -6,6 +6,7 @@ import { Modal } from './Modal/Modal';
 import Button from './Button/Button';
 import { RotatingLines } from 'react-loader-spinner';
 import ApiError from './ApiError/ApiError';
+import { useCallback } from 'react';
 
 export const App = () => {
   const [searchName, setSearchName] = useState('');
@@ -20,12 +21,12 @@ export const App = () => {
     async function imgArray() {
       try {
         setIsLoading(true);
-        const hits = await getImages(
-          searchName,
-          selectedPage === 0 ? 1 : selectedPage
-        );
-        setImgFromAPI([...imgFromAPI, ...hits]);
-        setSelectedPage(1);
+        const hits = await getImages(searchName, selectedPage);
+        if (selectedPage === 1) {
+          setImgFromAPI([...hits]);
+        } else {
+          setImgFromAPI(prev => [...prev, ...hits]);
+        }
       } catch (error) {
         setIsError(error.message);
       } finally {
@@ -36,12 +37,13 @@ export const App = () => {
       imgArray();
     }
   }, [searchName, selectedPage]);
-  const handleSearch = searchName => setSearchName(searchName);
-
-  const togleModal = URL => {
-    setIsOpenModal(!isOpenModal);
-    setSelectedPicture(URL);
+  const handleSearch = searchName => {
+    setSearchName(searchName);
+    setSelectedPage(1);
   };
+
+  const togleModal= useCallback((URL)=>{setIsOpenModal(!isOpenModal);
+    setSelectedPicture(URL);},[isOpenModal])
 
   // const getActivePicture = () => {
   //   return imgFromAPI.find(picture => {
@@ -50,7 +52,7 @@ export const App = () => {
   // };
 
   const addMorePictures = () => {
-    setSelectedPage(selectedPage + 1);
+    setSelectedPage(prev=>prev + 1);
   };
 
   return (
@@ -74,7 +76,9 @@ export const App = () => {
         <Modal togleModal={togleModal} pictureData={selectedPicture} />
       )}
 
-      {selectedPage > 0 && <Button addMorePictures={addMorePictures} />}
+      {Boolean(imgFromAPI.length) && (
+        <Button addMorePictures={addMorePictures} />
+      )}
     </div>
   );
 };
