@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import {AiOutlineSearch} from 'react-icons/ai'
 
 export const Searchbar=({onSubmitSearch})=> {
   const [search, setSearch]=useState('')
@@ -25,8 +26,8 @@ const handleChange  = e => {
         <form className="SearchForm" onSubmit={handleSubmit}>
           <button type="submit" className="SearchForm_button">
             <span className="SearchForm-button-label">Search</span>
+            <AiOutlineSearch size={"30px"}/>
           </button>
-
           <input 
           onChange={handleChange}
           name="search"
